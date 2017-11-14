@@ -10,11 +10,10 @@
       let request = { sender: this.sender, receiver: this.receiver, content: this.content }
       console.log('****request', request)
       $http.post('/', request)
-        .success((data) => {
-          console.log(data)
-        })
-        .error((data) => {
-          console.log('Error: ' + data)
+        .then((res) => {
+          console.log('---> response: ', res)
+        }, (err) => {
+          console.log('---> error: ', err)
         })
     }
   })

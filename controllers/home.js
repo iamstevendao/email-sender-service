@@ -1,6 +1,11 @@
 const popsicle = require('popsicle')
-const url = require('url')
 
+var mail = {}
+
+const SUCCESS = 1
+const FAIL = 0
+
+const URL_SENDGRID = 'https://api.sendgrid.com/v3/mail/send'
 // GET
 exports.index = (req, res) => {
   res.render('home', {
@@ -10,11 +15,45 @@ exports.index = (req, res) => {
 
 // post
 exports.send = (req, res) => {
-  console.log('request body: ', req.body)
-  //sendgrid
+  mail = req.body
+  if (!mail) {
+    res.status(400)
+    res.end('Mail is invalid')
+  }
+
+  send((code) => {
+    if (!code) {
+      res.status(400)
+      res.end('Failed to send email')
+    }
+    res.status(200)
+    res.end('Successfully send email')
+  })
+}
+
+function send (callback) {
+  sendBySendGrid((res) => {
+    if (handleCode(res) === FAIL) {
+      sendByMailgun((res) => {
+        if (handleCode(res) === FAIL)
+          callback(FAIL)
+        callback(SUCCESS)
+      })
+    }
+    callback(SUCCESS)
+  })
+}
+
+function handleCode (code) {
+  if (code >= 400)
+    return FAIL
+  return SUCCESS
+}
+
+function sendBySendGrid (callback) {
   popsicle.request({
     method: 'POST',
-    url: 'https://api.sendgrid.com/v3/mail/send',
+    url: URL_SENDGRID,
     headers: {
       'Content-Type': 'application/json',
       authorization: 'Bearer ' + process.env.SENDGRID_API_KEY
@@ -22,49 +61,53 @@ exports.send = (req, res) => {
     body: {
       personalizations: [{
         to: [{
-          email: 'fukifaku@gmail.com',
-          name: 'Fukie'
+          email: mail.receiver.email,
+          name: mail.receiver.name
         }]
       }],
       from: {
-        email: 'kkk@gmail.com',
-        name: 'kkk'
+        email: mail.sender.email,
+        name: mail.sender.name
       },
-      subject: 'Hello world!',
+      subject: mail.content.subject,
       content: [{
         type: 'text/html',
-        value: '<html><p>Hello world from SENDGRID</p></html>'
+        value: mail.content.body
       }]
     }
   })
     .use(popsicle.plugins.parse('json'))
-    .then(function (res) {
-      console.log(res.status) // => 200
-      console.log(res.body) //=> { ... }
+    .then((res) => {
+      console.log('*** SENDGRID: ', res.status)
+      callback(res.status)
     })
-  // const urlx = 'https://api:' + process.env.MAILGUN_API_KEY + '@api.mailgun.net/v3/sandbox8d9bb1b281d548949e4909b20993bd72.mailgun.org/messages'
-  // // mailgun
-  // popsicle.request({
-  //     method: 'POST',
-  //     url: urlx,
-  //     headers: {
-  //       'Content-Type': 'application/x-www-form-urlencoded'
-  //     },
-  //     body: {
-  //       from: 'kien@gmail.com',
-  //       to: 'FK <fukifaku@gmail.com>',
-  //       subject: 'Hello world!',
-  //       text: 'Hello world from MAILGUN'
-  //     }
-  //   })
-  //   .then(function (res) {
-  //     console.log('*** status MAILGUN: ', res.status) // => 200
-  //     console.log('*** body MAILGUN: ', res.body) //=> { ... }
-  //   }).catch((err) => {
-  //     console.log(err)
-  //     res.end()
-  //   })
-  res.render('home', {
-    title: 'Home'
+    .catch((err) => {
+      console.log('*** Error SendGrid: ', err)
+      callback(400)
+    })
+}
+
+function sendByMailgun (callback) {
+  const url = 'https://api:' + process.env.MAILGUN_API_KEY + '@api.mailgun.net/v3/' + process.env.MAILGUN_DOMAIN_NAME + '/messages'
+  // mailgun
+  popsicle.request({
+    method: 'POST',
+    url: url,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    body: {
+      from: mail.sender.name + ' <' + mail.sender.email + '>',
+      to: mail.receiver.name + ' <' + mail.receiver.email + '>',
+      subject: mail.content.subject,
+      text: mail.content.body
+    }
   })
+    .then((res) => {
+      console.log('*** MAILGUN: ', res.status)
+      callback(res.status)
+    }).catch((err) => {
+      console.log('*** Error Mailgun: ', err)
+      callback(400)
+    })
 }
