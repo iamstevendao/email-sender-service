@@ -2,11 +2,20 @@
   'use strict'
   var App = angular.module('emailSender', [])
 
-  App.controller('mailController', function MailController ($http) {
+  App.controller('mailController', function MailController($http) {
     // mail's properties
-    this.sender = { name: '', email: '' }
-    this.receiver = { name: '', email: '' }
-    this.content = { subject: '', body: ' ' }
+    this.sender = {
+      name: '',
+      email: ''
+    }
+    this.receiver = {
+      name: '',
+      email: ''
+    }
+    this.content = {
+      subject: '',
+      body: ' '
+    }
     // response from server
     this.response = ''
 
@@ -25,8 +34,6 @@
           this.response = res.data
           $('#resIcon').addClass('glyphicon glyphicon-ok')
           $('#resModal').modal('show')
-
-          // reset user's input
           this.resetData()
         }, (err) => {
           // error occurs
@@ -38,9 +45,18 @@
     }
 
     this.resetData = () => {
-      this.sender = { name: '', email: '' }
-      this.receiver = { name: '', email: '' }
-      this.content = { subject: '', body: ' ' }
+      this.sender = {
+        name: '',
+        email: ''
+      }
+      this.receiver = {
+        name: '',
+        email: ''
+      }
+      this.content = {
+        subject: '',
+        body: ' '
+      }
     }
   })
 })(window.angular)

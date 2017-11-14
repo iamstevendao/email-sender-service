@@ -35,7 +35,7 @@ A NodeJS app used the [iamstevendao/boilerplate-nodejs](https://github.com/iamst
    ```
 3. Build and Run
    ```bash
-   npm install && nodemon --inspect server.js
+   npm install && node server.js
    ```
 4. Open `localhost:3000` in your browser  
    (If you specified `PORT` in the `.env` file in the step 2, you would need to open `localhost:<YourPORT>`)
