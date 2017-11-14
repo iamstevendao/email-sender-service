@@ -1,5 +1,13 @@
 # Email Sender Service
-used the [iamstevendao/boilerplate-nodejs](https://github.com/iamstevendao/boilerplate-nodejs)
+A NodeJS app used the [iamstevendao/boilerplate-nodejs](https://github.com/iamstevendao/boilerplate-nodejs)
+
+## Highlights
+- Back End: NodeJS
+- Front End: AngularJS
+- HTML Engine: Pug
+- CSS: Less
+- Bootstrap
+- JQuery
 
 ## Configuration
 1. Create a file name `.env` in the root folder
