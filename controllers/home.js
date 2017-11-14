@@ -22,7 +22,7 @@ exports.send = (req, res) => {
   }
 
   send((code) => {
-    if (!code) {
+    if (code === FAIL) {
       res.status(400)
       res.end('Failed to send email')
     }
@@ -33,20 +33,24 @@ exports.send = (req, res) => {
 
 function send (callback) {
   sendBySendGrid((res) => {
+    // check code
     if (handleCode(res) === FAIL) {
+      // code is failed, try to send by mailgun
       sendByMailgun((res) => {
+        // check code
         if (handleCode(res) === FAIL)
-          callback(FAIL)
-        callback(SUCCESS)
+        // return fail
+        { callback(FAIL) } else
+          // otherwise return success
+          callback(SUCCESS)
       })
-    }
-    callback(SUCCESS)
+    } else
+      callback(SUCCESS)
   })
 }
 
 function handleCode (code) {
-  if (code >= 400)
-    return FAIL
+  if (code > 300) { return FAIL }
   return SUCCESS
 }
 
@@ -80,6 +84,7 @@ function sendBySendGrid (callback) {
     .then((res) => {
       console.log('*** SENDGRID: ', res.status)
       callback(res.status)
+      return
     })
     .catch((err) => {
       console.log('*** Error SendGrid: ', err)
@@ -106,6 +111,7 @@ function sendByMailgun (callback) {
     .then((res) => {
       console.log('*** MAILGUN: ', res.status)
       callback(res.status)
+      return
     }).catch((err) => {
       console.log('*** Error Mailgun: ', err)
       callback(400)
