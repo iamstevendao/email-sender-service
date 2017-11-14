@@ -7,11 +7,11 @@ block content
         h2.panel-title.text-center Compose an Email
       .panel-body
         .modal.fade(id='resModal')
-          .modal-dialog(role='document')
+          .modal-dialog.modal-lg(role='document')
             .modal-content
               .modal-body
                 h3(id='resIcon')
-                h3.text-center {{mail.response}}
+                h3.text-center(id='resStatus') {{mail.response}}
               .modal-footer
                 button.btn.btn-secondary(type='button', data-dismiss='modal') Close
         form.form-horizontal(name='mailForm', ng-submit='mailForm.$valid && mail.send()')
