@@ -1,0 +1,45 @@
+extends layout
+
+block content
+  .container
+    .panel
+      .panel-heading
+        h2.panel-title.text-center Compose an Email
+      .panel-body
+        if messages.success
+          .alert.alert-success(role='alert')
+            for success in messages.success
+              div= success.msg
+        if messages.error
+          .alert.alert-danger(role='alert')
+            for error in messages.error
+              div= error.msg
+
+        form.form-horizontal(method='POST')
+          h3.form-label from
+          .form-group
+            label.col-sm-1.col-sm-offset-1(for='nameSender') Name
+            .col-sm-4
+              input.form-control(type='text', name='nameSender', id='nameSender', autofocus=true)
+            label.col-sm-1(for='emailSender') Email
+            .col-sm-4
+              input.form-control(type='email', name='emailSender', id='emailSender')
+          h3.form-label to
+          .form-group
+            label.col-sm-1.col-sm-offset-1(for='nameReceiver') Name
+            .col-sm-4
+              input.form-control(type='text', name='nameReceiver', id='nameReceiver')
+            label.col-sm-1(for='emailReceiver') Email
+            .col-sm-4
+              input.form-control(type='email', name='emailReceiver', id='emailReceiver')
+          h3.form-label content
+          .form-group
+            label.col-sm-2.col-sm-offset-1(for='subject') Subject
+            .col-sm-7
+              input.form-control(type='text', name='subject', id='subject')
+          .form-group
+            label.col-sm-2.col-sm-offset-1(for='body') Body
+            .col-sm-7
+              textarea.form-control(name='body', id='body', rows='7')
+          .form-group
+              button.btn.btn-success.col-sm-offset-4.col-sm-5(type='submit') Send
