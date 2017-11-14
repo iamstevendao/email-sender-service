@@ -1,9 +1,9 @@
 # Email Sender Service
-A NodeJS app used the [iamstevendao/boilerplate-nodejs](https://github.com/iamstevendao/boilerplate-nodejs)
+A NodeJS app uses the [iamstevendao/boilerplate-nodejs](https://github.com/iamstevendao/boilerplate-nodejs)
 
 ### About
-- Send emails using [SendGrid](https://sendgrid.com) and [Mailgun](https://www.mailgun.com/)
-- Send with HTTP request using [Popsicle](https://github.com/blakeembrey/popsicle)
+- Send emails using [SendGrid](https://sendgrid.com) and [Mailgun](https://www.mailgun.com/), automatically switch to the other if one goes down
+- Call APIs with HTTP requests using [Popsicle](https://github.com/blakeembrey/popsicle)
 - Form validation using AngularJS
 
 <p align="center">
@@ -20,7 +20,7 @@ A NodeJS app used the [iamstevendao/boilerplate-nodejs](https://github.com/iamst
 - JQuery
 
 ## Configuration
-1. Create a file name `.env` in the root folder
+1. Create a file name `.env` in the root folder.
 2. Add API credentials to `.env`:
    ```bash
    #SendGrid API key: https://sendgrid.com/docs/Classroom/Send/How_Emails_Are_Sent/api_keys.html
@@ -37,11 +37,11 @@ A NodeJS app used the [iamstevendao/boilerplate-nodejs](https://github.com/iamst
    ```bash
    npm install && node server.js
    ```
-4. Open `localhost:3000` in your browser  
-   (If you specified `PORT` in the `.env` file in the step 2, you would need to open `localhost:<YourPORT>`)
+4. Open `localhost:3000` in your browser.    
+   (If you specified `PORT` in the `.env` file in the step 2, you would need to open `localhost:<YourPORT>`).
 5. Enjoy!
 
 ## License
-This project is distributed under [MIT](https://github.com/blakeembrey/popsicle/blob/master/LICENSE) license
+This project is distributed under [MIT](https://github.com/blakeembrey/popsicle/blob/master/LICENSE) license.
 
 made with &#x2764; by [Steven](https://github.com/iamstevendao).
