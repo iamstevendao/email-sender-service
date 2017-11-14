@@ -30,11 +30,16 @@ A NodeJS app used the [iamstevendao/boilerplate-nodejs](https://github.com/iamst
    MAILGUN_DOMAIN=''
    #Session secret, can be a random string
    SESSION_SECRET=''
+   #Specified PORT number (optional, default value is 3000)
+   PORT=''
    ```
 3. Build and Run
    ```bash
    npm install && nodemon --inspect server.js
    ```
+4. Open `localhost:3000` in your browser  
+   (If you specified `PORT` in the `.env` file in the step 2, you would need to open `localhost:<YourPORT>`)
+5. Enjoy!
 
 ## License
 This project is distributed under [MIT](https://github.com/blakeembrey/popsicle/blob/master/LICENSE) license
