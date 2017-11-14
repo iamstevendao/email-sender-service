@@ -1,7 +1,7 @@
 extends layout
 
 block content
-  .container
+  .container(ng-app='emailSender' ng-controller='mailController as mail')
     .panel
       .panel-heading
         h2.panel-title.text-center Compose an Email
@@ -15,31 +15,31 @@ block content
             for error in messages.error
               div= error.msg
 
-        form.form-horizontal(method='POST')
+        form.form-horizontal
           h3.form-label from
           .form-group
             label.col-sm-1.col-sm-offset-1(for='nameSender') Name
             .col-sm-4
-              input.form-control(type='text', name='nameSender', id='nameSender', autofocus=true)
+              input.form-control(type='text', name='nameSender', ng-model='mail.sender.name', required, autofocus=true)
             label.col-sm-1(for='emailSender') Email
             .col-sm-4
-              input.form-control(type='email', name='emailSender', id='emailSender')
+              input.form-control(type='email', name='emailSender', ng-model='mail.sender.email', required)
           h3.form-label to
           .form-group
             label.col-sm-1.col-sm-offset-1(for='nameReceiver') Name
             .col-sm-4
-              input.form-control(type='text', name='nameReceiver', id='nameReceiver')
+              input.form-control(type='text', name='nameReceiver', ng-model='mail.receiver.name', required)
             label.col-sm-1(for='emailReceiver') Email
             .col-sm-4
-              input.form-control(type='email', name='emailReceiver', id='emailReceiver')
+              input.form-control(type='email', name='emailReceiver', ng-model='mail.receiver.email', required)
           h3.form-label content
           .form-group
             label.col-sm-2.col-sm-offset-1(for='subject') Subject
             .col-sm-7
-              input.form-control(type='text', name='subject', id='subject')
+              input.form-control(type='text', name='subject', ng-model='mail.content.subject', required)
           .form-group
             label.col-sm-2.col-sm-offset-1(for='body') Body
             .col-sm-7
-              textarea.form-control(name='body', id='body', rows='7')
+              textarea.form-control(name='body', ng-model='mail.content.body', rows='7')
           .form-group
-              button.btn.btn-success.col-sm-offset-4.col-sm-5(type='submit') Send
+              button.btn.col-sm-offset-4.col-sm-5(type='submit', ng-click='mail.send()') Submit

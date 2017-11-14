@@ -38,7 +38,9 @@ app.use(flash())
 app.use(express.static(path.join(__dirname, 'public')))
 
 // home
-app.route('/').get(homeController.index)
+app.route('/')
+  .get(homeController.index)
+  .post(homeController.send)
 
 // Production error handler
 if (app.get('env') === 'production') {
