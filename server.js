@@ -16,7 +16,6 @@ dotenv.load()
 const homeController = require('./controllers/home')
 
 const app = express()
-var urls
 
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'pug')

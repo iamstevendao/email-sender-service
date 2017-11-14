@@ -17,7 +17,7 @@ A NodeJS app used the [iamstevendao/boilerplate-nodejs](https://github.com/iamst
    SENDGRID_API_KEY=''
    #Mailgun API key and domain name
    MAILGUN_API_KEY=''
-   MAILGUN_DOMAIN_NAME=''
+   MAILGUN_DOMAIN=''
    #Session secret, can be a random string
    SESSION_SECRET=''
    ```

@@ -10,9 +10,10 @@ block content
           .modal-dialog(role='document')
             .modal-content
               .modal-body
-                p {{mail.response}}
+                h3(id='resIcon')
+                h3.text-center {{mail.response}}
+              .modal-footer
                 button.btn.btn-secondary(type='button', data-dismiss='modal') Close
-
         form.form-horizontal(name='mailForm', ng-submit='mailForm.$valid && mail.send()')
           h3.form-label from
           .form-group

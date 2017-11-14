@@ -1,11 +1,19 @@
 const popsicle = require('popsicle')
 
-var mail = {}
+// constants from .env
+const MAILGUN_API_KEY = process.env.MAILGUN_API_KEY
+const MAILGUN_DOMAIN = process.env.MAILGUN_DOMAIN
+const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY
 
-const SUCCESS = 1
-const FAIL = 0
+// status code
+const CODE_SUCCESS = 1
+const CODE_FAIL = 0
 
 const URL_SENDGRID = 'https://api.sendgrid.com/v3/mail/send'
+const URL_MAILGUN = `https://api:${MAILGUN_API_KEY}@api.mailgun.net/v3/${MAILGUN_DOMAIN}/messages`
+
+var mail = {}
+
 // GET
 exports.index = (req, res) => {
   res.render('home', {
@@ -13,54 +21,60 @@ exports.index = (req, res) => {
   })
 }
 
-// post
+// POST
 exports.send = (req, res) => {
+  // store the request body in mail
   mail = req.body
+  // if mail is null return fail
   if (!mail) {
     res.status(400)
     res.end('Mail is invalid')
   }
-
+  // send email
   send((code) => {
-    if (code === FAIL) {
+    if (code === CODE_FAIL) {
       res.status(400)
       res.end('Failed to send email')
     }
     res.status(200)
-    res.end('Successfully send email')
+    res.end('Successfully sent email')
   })
 }
 
 function send (callback) {
+  // send by SendGrid first
   sendBySendGrid((res) => {
     // check code
-    if (handleCode(res) === FAIL) {
+    if (handleCode(res) === CODE_FAIL) {
       // code is failed, try to send by mailgun
       sendByMailgun((res) => {
         // check code
-        if (handleCode(res) === FAIL)
+        if (handleCode(res) === CODE_FAIL)
         // return fail
-        { callback(FAIL) } else
-          // otherwise return success
-          callback(SUCCESS)
+        { callback(CODE_FAIL) }
+        else
+        // otherwise return success
+        { callback(CODE_SUCCESS) }
       })
-    } else
-      callback(SUCCESS)
+    } else { callback(CODE_SUCCESS) }
   })
 }
 
 function handleCode (code) {
-  if (code > 300) { return FAIL }
-  return SUCCESS
+  // decide to return FAIL or TRUE based on the returned status
+  if (code > 300) { return CODE_FAIL }
+  return CODE_SUCCESS
 }
 
 function sendBySendGrid (callback) {
+
+  // send a mail by a hand-rolled HTTP request
   popsicle.request({
     method: 'POST',
     url: URL_SENDGRID,
     headers: {
       'Content-Type': 'application/json',
-      authorization: 'Bearer ' + process.env.SENDGRID_API_KEY
+      authorization: 'Bearer ' + SENDGRID_API_KEY
     },
     body: {
       personalizations: [{
@@ -93,11 +107,10 @@ function sendBySendGrid (callback) {
 }
 
 function sendByMailgun (callback) {
-  const url = 'https://api:' + process.env.MAILGUN_API_KEY + '@api.mailgun.net/v3/' + process.env.MAILGUN_DOMAIN_NAME + '/messages'
   // mailgun
   popsicle.request({
     method: 'POST',
-    url: url,
+    url: URL_MAILGUN,
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
     },
