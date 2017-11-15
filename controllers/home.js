@@ -1,9 +1,8 @@
 const popsicle = require('popsicle')
 
 // constants from .env
-const MAILGUN_API_KEY = process.env.MAILGUN_API_KEY
-const MAILGUN_DOMAIN = process.env.MAILGUN_DOMAIN
 const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY
+const SPARKPOST_API_KEY = process.env.SPARKPOST_API_KEY
 
 // status code
 const CODE_SUCCESS = 1
@@ -11,12 +10,12 @@ const CODE_FAIL = 0
 const CODE_ERROR = 600
 
 const URL_SENDGRID = 'https://api.sendgrid.com/v3/mail/send'
-const URL_MAILGUN = `https://api:${MAILGUN_API_KEY}@api.mailgun.net/v3/${MAILGUN_DOMAIN}/message`
+const URL_SPARKPOST = 'https://api.sparkpost.com/api/v1/transmissions'
 
 var mail = {}
 var errorCode = {
   sendgrid: 0,
-  mailgun: 0
+  sparkpost: 0
 }
 
 // GET
@@ -40,7 +39,7 @@ exports.send = (req, res) => {
     if (!code) {
       // if false returns 400, and errorcodes
       res.status(400)
-      res.end(`Failed to send email!\nErrorCode: SendGrid[${errorCode.sendgrid}], MailGun[${errorCode.mailgun}]\nPlease contact mail services for more infomation!`)
+      res.end(`Failed to send email!\nErrorCode: SendGrid[${errorCode.sendgrid}], Sparkpost[${errorCode.sparkpost}]\nPlease contact mail services for more infomation!`)
     }
     res.status(200)
     res.end('Successfully sent email')
@@ -52,8 +51,8 @@ function send(callback) {
   sendBySendGrid((res) => {
     // check code
     if (handleCode(res) === CODE_FAIL) {
-      // code is failed, try to send by mailgun
-      sendByMailgun((res) => {
+      // code is failed, try to send by sparkpost
+      sendBySparkpost((res) => {
         // check code
         if (handleCode(res) === CODE_FAIL)
         // return fail
@@ -125,30 +124,44 @@ function sendBySendGrid(callback) {
     })
 }
 
-function sendByMailgun(callback) {
-  let recipents = mail.receivers.email.replace(';', ',')
-  // mailgun
+function sendBySparkpost(callback) {
+  let recipents = []
+
+  mail.receivers.email.split(';').forEach((email) => {
+    recipents.push({
+      address: email
+    })
+  })
+  // SPARKPOST
   popsicle.request({
       method: 'POST',
-      url: URL_MAILGUN,
+      url: URL_SPARKPOST,
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'application/json',
+        Authorization: SPARKPOST_API_KEY
       },
       body: {
-        from: mail.sender.name + ' <' + mail.sender.email + '>',
-        to: recipents,
-        subject: mail.content.subject,
-        text: mail.content.body
+        options: {
+          sandbox: true
+        },
+        content: {
+          from: mail.sender.email,
+          subject: mail.content.subject,
+          text: mail.content.body
+        },
+        recipients: recipents
       }
+
     })
+    .use(popsicle.plugins.parse('json'))
     .then((res) => {
-      console.log('*** MAILGUN: ', res.status, " - ", res.body)
-      errorCode.mailgun = res.status
+      console.log('*** SPARKPOST: ', res.status, " - ", res.body)
+      errorCode.sparkpost = res.status
       callback(res.status)
       return
     }).catch((err) => {
-      errorCode.mailgun = CODE_ERROR
-      console.log('*** Error Mailgun: ', err)
+      errorCode.sparkpost = CODE_ERROR
+      console.log('*** Error SPARKPOST: ', err)
       callback(400)
     })
 }

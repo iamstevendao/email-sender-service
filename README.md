@@ -2,7 +2,7 @@
 A NodeJS app uses the [iamstevendao/boilerplate-nodejs](https://github.com/iamstevendao/boilerplate-nodejs)
 
 ### About
-- Send emails using [SendGrid](https://sendgrid.com) and [Mailgun](https://www.mailgun.com/), automatically switch to the other if one goes down
+- Send emails using [SendGrid](https://sendgrid.com) and [Sparkpost](https://www.sparkpost.com/), automatically switch to the other if one goes down
 - Call APIs with HTTP requests using [Popsicle](https://github.com/blakeembrey/popsicle)
 - Form validation using AngularJS
 
@@ -25,9 +25,8 @@ A NodeJS app uses the [iamstevendao/boilerplate-nodejs](https://github.com/iamst
    ```bash
    #SendGrid API key: https://sendgrid.com/docs/Classroom/Send/How_Emails_Are_Sent/api_keys.html
    SENDGRID_API_KEY=''
-   #Mailgun API key and domain name
-   MAILGUN_API_KEY=''
-   MAILGUN_DOMAIN=''
+   #Sparkpost API key
+   SPARKPOST_API_KEY=''
    #Session secret, can be a random string
    SESSION_SECRET=''
    #Specified PORT number (optional, default value is 3000)
