@@ -82,7 +82,7 @@ App.controller('mailController', function MailController($http, $scope) {
       require: 'ngModel',
       link: function (scope, element, attrs, ctrl) {
         ctrl.$parsers.unshift(function (viewValue) {
-          var emails = viewValue.split(',')
+          var emails = viewValue.split(';')
           // define single email validator here
           var re = /\S+@\S+\.\S+/
 

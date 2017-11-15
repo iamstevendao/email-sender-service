@@ -18,19 +18,19 @@ block content
           h3.form-label from
           .form-group
             label.col-sm-1.col-sm-offset-1(for='nameSender') Name*
-            .col-sm-4
+            .col-sm-3
               input.form-control(type='text', name='nameSender', ng-model='mail.sender.name', required, autofocus=true)
             label.col-sm-1(for='emailSender') Email*
-            .col-sm-4
+            .col-sm-5
               input.form-control(type='email', name='emailSender', ng-model='mail.sender.email', required)
           h3.form-label to
           .form-group
             label.col-sm-1.col-sm-offset-1(for='nameReceiver') Name
-            .col-sm-4
+            .col-sm-3
               input.form-control(type='text', name='nameReceiver', ng-model='mail.receivers.name')
             label.col-sm-1(for='emailReceiver') Emails*
-            .col-sm-4(ng-class="{'has-error': mailForm.emailReceiver.$invalid}")
-              input.form-control(type='text', name='emailReceiver', placeholder='Use ; for multiple emails', multiple-emails, ng-model='mail.receivers.email', required)
+            .col-sm-5(ng-class="{'has-error': mailForm.emailReceiver.$invalid}")
+              input.form-control(type='text', name='emailReceiver', placeholder='Use ; for multiple emails (no spaces)', multiple-emails, ng-model='mail.receivers.email', required)
           h3.form-label content
           .form-group
             label.col-sm-2.col-sm-offset-1(for='subject') Subject*

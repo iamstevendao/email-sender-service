@@ -11,7 +11,7 @@ const CODE_FAIL = 0
 const CODE_ERROR = 600
 
 const URL_SENDGRID = 'https://api.sendgrid.com/v3/mail/send'
-const URL_MAILGUN = `https://api:${MAILGUN_API_KEY}@api.mailgun.net/v3/${MAILGUN_DOMAIN}/messages`
+const URL_MAILGUN = `https://api:${MAILGUN_API_KEY}@api.mailgun.net/v3/${MAILGUN_DOMAIN}/message`
 
 var mail = {}
 var errorCode = {
@@ -80,7 +80,14 @@ function handleCode(code) {
 }
 
 function sendBySendGrid(callback) {
+  let recipents = []
 
+  mail.receivers.email.split(';').forEach((email) => {
+    recipents.push({
+      email: email,
+      name: ''
+    })
+  })
   // send a mail by a hand-rolled HTTP request
   popsicle.request({
       method: 'POST',
@@ -91,10 +98,7 @@ function sendBySendGrid(callback) {
       },
       body: {
         personalizations: [{
-          to: [{
-            email: mail.receiver.email,
-            name: mail.receiver.name
-          }]
+          to: recipents
         }],
         from: {
           email: mail.sender.email,
@@ -122,6 +126,7 @@ function sendBySendGrid(callback) {
 }
 
 function sendByMailgun(callback) {
+  let recipents = mail.receivers.email.replace(';', ',')
   // mailgun
   popsicle.request({
       method: 'POST',
@@ -131,13 +136,13 @@ function sendByMailgun(callback) {
       },
       body: {
         from: mail.sender.name + ' <' + mail.sender.email + '>',
-        to: mail.receiver.name + ' <' + mail.receiver.email + '>',
+        to: recipents,
         subject: mail.content.subject,
         text: mail.content.body
       }
     })
     .then((res) => {
-      console.log('*** MAILGUN: ', res.status)
+      console.log('*** MAILGUN: ', res.status, " - ", res.body)
       errorCode.mailgun = res.status
       callback(res.status)
       return
