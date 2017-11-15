@@ -1,16 +1,15 @@
-(function (angular) {
-  'use strict'
-  var App = angular.module('emailSender', [])
-  const CODE_SUCCESS = 1
-  const CODE_FAIL = 0
+'use strict'
+var App = angular.module('emailSender', [])
+const CODE_SUCCESS = 1
+const CODE_FAIL = 0
 
-  App.controller('mailController', function MailController($http) {
+App.controller('mailController', function MailController($http, $scope) {
     // mail's properties
     this.sender = {
       name: '',
       email: ''
     }
-    this.receiver = {
+    this.receivers = {
       name: '',
       email: ''
     }
@@ -26,7 +25,7 @@
       // initialize request
       let request = {
         sender: this.sender,
-        receiver: this.receiver,
+        receivers: this.receivers,
         content: this.content
       }
       // send a POST request
@@ -68,7 +67,7 @@
         name: '',
         email: ''
       }
-      this.receiver = {
+      this.receivers = {
         name: '',
         email: ''
       }
@@ -78,4 +77,36 @@
       }
     }
   })
-})(window.angular)
+  .directive('multipleEmails', function () {
+    return {
+      require: 'ngModel',
+      link: function (scope, element, attrs, ctrl) {
+        ctrl.$parsers.unshift(function (viewValue) {
+          var emails = viewValue.split(',')
+          // define single email validator here
+          var re = /\S+@\S+\.\S+/
+
+          // angular.foreach(emails, function() {
+          var validityArr = emails.map(function (str) {
+            return re.test(str.trim())
+          }); // sample return is [true, true, true, false, false, false]
+          console.log('Ctrl: ', ctrl)
+          console.log(emails, validityArr)
+          var atLeastOneInvalid = false
+          angular.forEach(validityArr, function (value) {
+            if (value === false)
+              atLeastOneInvalid = true
+          });
+          if (!atLeastOneInvalid) {
+            // ^ all I need is to call the angular email checker here, I think.
+            ctrl.$setValidity('multipleEmails', true)
+            return viewValue
+          } else {
+            ctrl.$setValidity('multipleEmails', false)
+            return undefined
+          }
+          // })
+        })
+      }
+    }
+  })

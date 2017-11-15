@@ -6842,6 +6842,9 @@ textarea {
 #resStatus {
   white-space: pre-line;
 }
+.has-error input {
+  background: #FFEBEE;
+}
 .hr-title {
   height: auto;
   margin-top: 20px;

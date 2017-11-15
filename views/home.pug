@@ -14,26 +14,26 @@ block content
                 h3.text-center(id='resStatus') {{mail.response}}
               .modal-footer
                 button.btn.btn-secondary(type='button', data-dismiss='modal') Close
-        form.form-horizontal(name='mailForm', ng-submit='mailForm.$valid && mail.send()')
+        form.form-horizontal(name='mailForm', ng-submit='mailForm.emailReceiver.$valid && mailForm.$valid && mail.send()')
           h3.form-label from
           .form-group
-            label.col-sm-1.col-sm-offset-1(for='nameSender') Name
+            label.col-sm-1.col-sm-offset-1(for='nameSender') Name*
             .col-sm-4
               input.form-control(type='text', name='nameSender', ng-model='mail.sender.name', required, autofocus=true)
-            label.col-sm-1(for='emailSender') Email
+            label.col-sm-1(for='emailSender') Email*
             .col-sm-4
               input.form-control(type='email', name='emailSender', ng-model='mail.sender.email', required)
           h3.form-label to
           .form-group
             label.col-sm-1.col-sm-offset-1(for='nameReceiver') Name
             .col-sm-4
-              input.form-control(type='text', name='nameReceiver', ng-model='mail.receiver.name', required)
-            label.col-sm-1(for='emailReceiver') Email
-            .col-sm-4
-              input.form-control(type='email', name='emailReceiver', ng-model='mail.receiver.email', required)
+              input.form-control(type='text', name='nameReceiver', ng-model='mail.receivers.name')
+            label.col-sm-1(for='emailReceiver') Emails*
+            .col-sm-4(ng-class="{'has-error': mailForm.emailReceiver.$invalid}")
+              input.form-control(type='text', name='emailReceiver', placeholder='Use ; for multiple emails', multiple-emails, ng-model='mail.receivers.email', required)
           h3.form-label content
           .form-group
-            label.col-sm-2.col-sm-offset-1(for='subject') Subject
+            label.col-sm-2.col-sm-offset-1(for='subject') Subject*
             .col-sm-7
               input.form-control(type='text', name='subject', ng-model='mail.content.subject', required)
           .form-group
