@@ -1,10 +1,10 @@
 # Email Sender Service
-A NodeJS app uses the [iamstevendao/boilerplate-nodejs](https://github.com/iamstevendao/boilerplate-nodejs)
+A NodeJS app uses the [iamstevendao/boilerplate-nodejs](https://github.com/iamstevendao/boilerplate-nodejs), as my solution for Cabcharge Full Stack Dev Challenge.
 
 ### About
-- Send emails using [SendGrid](https://sendgrid.com) and [Sparkpost](https://www.sparkpost.com/), automatically switch to the other if one goes down
-- Call APIs with HTTP requests using [Popsicle](https://github.com/blakeembrey/popsicle)
-- Form validation using AngularJS
+- Send emails using [SendGrid](https://sendgrid.com) and [Sparkpost](https://www.sparkpost.com/), automatically switch to the other if one goes down.
+- Call APIs with HTTP requests using [Popsicle](https://github.com/blakeembrey/popsicle).
+- Form validation using AngularJS.
 
 <p align="center">
   <img src="https://ncexfa.bn1302.livefilestore.com/y4mwcQJFgjeav0XgwM5ZVeuHxVzJCNyxXW0mlbRuf3Efyx1WRndZKNpm22zWri0a9_UgTtRDSJ8RzLTqkZLqFzPjNsONwqMpwY9EAcj8UjGvbJXfz3LSlpOAnOjbAtqEtpTqJ69wbGvw4bxVP2GDFTLna0zUduWhb9ouxBdHRDCFORFCHsblPv_5uXGSC9I-4poOQhwKs_tl8I8evufT2q7UQ?width=1024&height=660&cropmode=none" width="1024" height="660" />
@@ -12,15 +12,15 @@ A NodeJS app uses the [iamstevendao/boilerplate-nodejs](https://github.com/iamst
 </p>
 
 ## Highlights
-- Back End: NodeJS
-- Front End: AngularJS
-- Template Engine: Pug
-- CSS Framework: Bootstrap
-- CSS Preprocessor: Less
-- JQuery
+- **Back End**: **NodeJS**
+- **Front End**: **AngularJS**
+- **Template Engine**: **Pug**
+- **CSS Framework**: **Bootstrap**
+- **CSS Preprocessor**: **Less**
+- **JQuery**
 
 ## Configuration
-1. Create a file name `.env` in the root folder.
+1. Create a file named `.env` in the root folder.
 2. Add API credentials to `.env`:
    ```bash
    #SendGrid API key: https://sendgrid.com/docs/Classroom/Send/How_Emails_Are_Sent/api_keys.html
