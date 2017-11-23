@@ -78,34 +78,34 @@ App.controller('mailController', function MailController($http, $scope) {
     }
   })
   .directive('multipleEmails', function () {
+    // validate multiple emails in the input
     return {
       require: 'ngModel',
       link: function (scope, element, attrs, ctrl) {
         ctrl.$parsers.unshift(function (viewValue) {
           var emails = viewValue.split(';')
-          // define single email validator here
+          // single email validator regex
           var re = /\S+@\S+\.\S+/
 
-          // angular.foreach(emails, function() {
           var validityArr = emails.map(function (str) {
             return re.test(str.trim())
-          }); // sample return is [true, true, true, false, false, false]
-          console.log('Ctrl: ', ctrl)
-          console.log(emails, validityArr)
+          });
+
+          // handling return values after test
           var atLeastOneInvalid = false
           angular.forEach(validityArr, function (value) {
             if (value === false)
               atLeastOneInvalid = true
           });
+
           if (!atLeastOneInvalid) {
-            // ^ all I need is to call the angular email checker here, I think.
+
             ctrl.$setValidity('multipleEmails', true)
             return viewValue
           } else {
             ctrl.$setValidity('multipleEmails', false)
             return undefined
           }
-          // })
         })
       }
     }

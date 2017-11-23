@@ -12,11 +12,11 @@ A NodeJS app uses the [iamstevendao/boilerplate-nodejs](https://github.com/iamst
 </p>
 
 ## Highlights
-- **Back End**: **NodeJS**
-- **Front End**: **AngularJS**
-- **Template Engine**: **Pug**
-- **CSS Framework**: **Bootstrap**
-- **CSS Preprocessor**: **Less**
+- Back End: **NodeJS**
+- Front End: **AngularJS**
+- Template Engine: **Pug**
+- CSS Framework: **Bootstrap**
+- CSS Preprocessor: **Less**
 - **JQuery**
 
 ## Configuration
