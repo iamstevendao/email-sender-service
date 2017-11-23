@@ -25,13 +25,11 @@ var send = (mail, callback) => {
       // code is failed, try to send by sparkpost
       sendBySparkpost(mail, (res) => {
         // check code
-        if (handleCode(res) === CODE_FAIL)
-        // return fail
-        {
+        if (handleCode(res) === CODE_FAIL) {
+          // return fail
           callback(CODE_FAIL)
-        } else
-        // otherwise return success
-        {
+        } else {
+          // otherwise return success
           callback(CODE_SUCCESS)
         }
       })
@@ -41,7 +39,7 @@ var send = (mail, callback) => {
   })
 }
 
-function handleCode(code) {
+function handleCode (code) {
   // decide to return FAIL or TRUE based on the returned status
   if (code > 300) {
     return CODE_FAIL
@@ -49,7 +47,7 @@ function handleCode(code) {
   return CODE_SUCCESS
 }
 
-function sendBySendGrid(mail, callback) {
+function sendBySendGrid (mail, callback) {
   let recipients = []
 
   mail.receivers.email.split(';').forEach((email) => {
@@ -59,33 +57,32 @@ function sendBySendGrid(mail, callback) {
   })
   // send a mail by a hand-rolled HTTP request
   popsicle.request({
-      method: 'POST',
-      url: URL_SENDGRID,
-      headers: {
-        'Content-Type': 'application/json',
-        authorization: 'Bearer ' + SENDGRID_API_KEY
+    method: 'POST',
+    url: URL_SENDGRID,
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: 'Bearer ' + SENDGRID_API_KEY
+    },
+    body: {
+      personalizations: [{
+        to: recipients
+      }],
+      from: {
+        email: mail.sender.email,
+        name: mail.sender.name
       },
-      body: {
-        personalizations: [{
-          to: recipients
-        }],
-        from: {
-          email: mail.sender.email,
-          name: mail.sender.name
-        },
-        subject: mail.content.subject,
-        content: [{
-          type: 'text/html',
-          value: mail.content.body
-        }]
-      }
-    })
+      subject: mail.content.subject,
+      content: [{
+        type: 'text/html',
+        value: mail.content.body
+      }]
+    }
+  })
     .use(popsicle.plugins.parse('json'))
     .then((res) => {
       console.log('*** SENDGRID: ', res.status)
       errorCode.sendgrid = res.status
       callback(res.status)
-      return
     })
     .catch((err) => {
       errorCode.sendgrid = CODE_ERROR
@@ -94,7 +91,7 @@ function sendBySendGrid(mail, callback) {
     })
 }
 
-function sendBySparkpost(mail, callback) {
+function sendBySparkpost (mail, callback) {
   let recipients = []
 
   mail.receivers.email.split(';').forEach((email) => {
@@ -105,30 +102,29 @@ function sendBySparkpost(mail, callback) {
 
   // SPARKPOST
   popsicle.request({
-      method: 'POST',
-      url: URL_SPARKPOST,
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: SPARKPOST_API_KEY
+    method: 'POST',
+    url: URL_SPARKPOST,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: SPARKPOST_API_KEY
+    },
+    body: {
+      options: {
+        sandbox: true
       },
-      body: {
-        options: {
-          sandbox: true
-        },
-        content: {
-          from: mail.sender.email,
-          subject: mail.content.subject,
-          text: mail.content.body
-        },
-        recipients
-      }
-    })
+      content: {
+        from: mail.sender.email,
+        subject: mail.content.subject,
+        text: mail.content.body
+      },
+      recipients
+    }
+  })
     .use(popsicle.plugins.parse('json'))
     .then((res) => {
-      console.log('*** SPARKPOST: ', res.status, " - ", res.body)
+      console.log('*** SPARKPOST: ', res.status, ' - ', res.body)
       errorCode.sparkpost = res.status
       callback(res.status)
-      return
     }).catch((err) => {
       errorCode.sparkpost = CODE_ERROR
       console.log('*** Error SPARKPOST: ', err)
